@@ -27,6 +27,7 @@ function draw() {
   drawPaddle()
   drawBall()
   drawScore()
+  if (isGameOver && keyIsDown(ENTER)) resetGame()
 }
 
 function drawPaddle() {
@@ -48,11 +49,10 @@ function drawBall() {
 
 function drawScore() {
   fill(255)
-  textSize(height * 0.07)
+  textSize(width * 0.05)
   textAlign(CENTER, CENTER)
-  text(score, width / 2, height * 0.1)
-  textSize(height * 0.1)
-  if (isGameOver) text('Game Over', width / 2, height * 0.2)
+  text(isGameOver ? `Final score: ${score}` : score, width / 2, height * 0.1)
+  if (isGameOver) text('Press ENTER Key to Play Again', width / 2, height * 0.2)
 }
 
 function _updateIsBallTouchingParams() {
@@ -81,4 +81,18 @@ function _updateBallPositions() {
   if (isGameOver) return
   ballPositionX += isBallTravelingRight ? ballSpeed : -ballSpeed
   ballPositionY += isBallTravelingDown ? ballSpeed : -ballSpeed
+}
+
+function resetGame() {
+  paddlePositionX = 0
+  ballPositionX = BALL_DIAMETER + Math.floor(Math.random() * (innerWidth - 2 * BALL_DIAMETER))
+  ballPositionY = BALL_DIAMETER
+  isBallTravelingDown = true
+  isBallTravelingRight = Math.random() > 0.5
+  ballSpeed = 5
+  score = 0
+  isGameOver = false
+  isBallTouchingWall = false
+  isBallTouchingCeiling = false
+  isBallTouchingPaddle = false
 }
