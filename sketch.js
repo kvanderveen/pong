@@ -78,8 +78,7 @@ function _updateScoreBallSpeedAndGameOver() {
 }
 
 function _updateBallPositions() {
-  if (!isGameOver) {
-    ballPositionX += isBallTravelingRight ? ballSpeed : -ballSpeed
-    ballPositionY += isBallTravelingDown ? ballSpeed : -ballSpeed
-  }
+  if (isGameOver) return
+  ballPositionX += isBallTravelingRight ? ballSpeed : -ballSpeed
+  ballPositionY += isBallTravelingDown ? ballSpeed : -ballSpeed
 }
