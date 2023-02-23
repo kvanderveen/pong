@@ -1,8 +1,10 @@
 const PADDLE_WIDTH = 200
 const PADDLE_HEIGHT = 50
 const BALL_DIAMETER = 50
+const BALL_RADIUS = BALL_DIAMETER / 2
+const PADDLE_SPEED = 20
 
-let paddlePositionX = 0
+let paddlePositionX = innerWidth / 2 - PADDLE_WIDTH / 2
 let ballPositionX = BALL_DIAMETER + Math.floor(Math.random() * (innerWidth - 2 * BALL_DIAMETER))
 let ballPositionY = BALL_DIAMETER
 
@@ -33,9 +35,10 @@ function draw() {
 function drawPaddle() {
   fill(255)
   rect(paddlePositionX, height - PADDLE_HEIGHT, PADDLE_WIDTH, PADDLE_HEIGHT)
-  if (keyIsDown(LEFT_ARROW) && paddlePositionX > 0) paddlePositionX -= min(10, paddlePositionX)
+  if (keyIsDown(LEFT_ARROW) && paddlePositionX > 0)
+    paddlePositionX -= min(PADDLE_SPEED, paddlePositionX)
   if (keyIsDown(RIGHT_ARROW) && paddlePositionX < width - PADDLE_WIDTH)
-    paddlePositionX += min(10, width - paddlePositionX - PADDLE_WIDTH)
+    paddlePositionX += min(PADDLE_SPEED, width - paddlePositionX - PADDLE_WIDTH)
 }
 
 function drawBall() {
@@ -56,14 +59,13 @@ function drawScore() {
 }
 
 function _updateIsBallTouchingParams() {
-  isBallTouchingWall =
-    ballPositionX <= BALL_DIAMETER / 2 || ballPositionX >= width - BALL_DIAMETER / 2
-  isBallTouchingCeiling = ballPositionY <= BALL_DIAMETER / 2
+  isBallTouchingWall = ballPositionX <= BALL_RADIUS || ballPositionX >= width - BALL_RADIUS
+  isBallTouchingCeiling = ballPositionY <= BALL_RADIUS
   isBallTouchingPaddle =
     ballPositionX >= paddlePositionX &&
     ballPositionX <= paddlePositionX + PADDLE_WIDTH &&
-    height - ballPositionY - BALL_DIAMETER / 2 <= PADDLE_HEIGHT &&
-    height - ballPositionY - BALL_DIAMETER / 2 >= PADDLE_HEIGHT - PADDLE_HEIGHT * 0.1
+    height - ballPositionY - BALL_RADIUS <= PADDLE_HEIGHT &&
+    height - ballPositionY - BALL_RADIUS >= PADDLE_HEIGHT - PADDLE_HEIGHT * 0.1
 }
 
 function _updateBallDirections() {
@@ -74,7 +76,7 @@ function _updateBallDirections() {
 function _updateScoreBallSpeedAndGameOver() {
   if (isBallTouchingPaddle) score++
   if (isBallTouchingPaddle && score % 3 === 0) ballSpeed++
-  if (ballPositionY > height + BALL_DIAMETER / 2) isGameOver = true
+  if (ballPositionY > height + BALL_RADIUS) isGameOver = true
 }
 
 function _updateBallPositions() {
@@ -84,7 +86,7 @@ function _updateBallPositions() {
 }
 
 function resetGame() {
-  paddlePositionX = 0
+  paddlePositionX = width / 2 - PADDLE_WIDTH / 2
   ballPositionX = BALL_DIAMETER + Math.floor(Math.random() * (innerWidth - 2 * BALL_DIAMETER))
   ballPositionY = BALL_DIAMETER
   isBallTravelingDown = true
